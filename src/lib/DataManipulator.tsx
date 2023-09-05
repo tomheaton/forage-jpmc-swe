@@ -1,6 +1,6 @@
-import { ServerRespond } from "./DataStreamer";
+import { type ServerRespond } from "./DataStreamer";
 
-export interface Row {
+export type Row = {
   price_abc: number;
   price_def: number;
   ratio: number;
@@ -8,9 +8,9 @@ export interface Row {
   lower_bound: number;
   upper_bound: number;
   trigger_alert: number | undefined;
-}
+};
 
-export class DataManipulator {
+export default class DataManipulator {
   static generateRow(serverResponds: ServerRespond[]): Row {
     const priceABC =
       (serverResponds[0].top_ask.price + serverResponds[0].top_bid.price) / 2;

@@ -1,17 +1,17 @@
-export interface Order {
+export type Order = {
   price: number;
   size: number;
-}
+};
 
-export interface ServerRespond {
+export type ServerRespond = {
   stock: string;
   top_bid: Order;
   top_ask: Order;
   timestamp: Date;
-}
+};
 
-class DataStreamer {
-  static API_URL: string = "http://localhost:8080/query?id=1";
+export default class DataStreamer {
+  static API_URL: string = "http://localhost:80380/query?id=1";
 
   static getData(callback: (data: ServerRespond[]) => void): void {
     const request = new XMLHttpRequest();
@@ -28,5 +28,3 @@ class DataStreamer {
     request.send();
   }
 }
-
-export default DataStreamer;

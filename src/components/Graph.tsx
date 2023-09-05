@@ -1,8 +1,10 @@
+import { type Table, type TableData } from "@finos/perspective";
 import "@finos/perspective-viewer";
-import { type Table } from "@finos/perspective";
 import { useEffect, useRef } from "react";
+import DataManipulator from "../lib/DataManipulator";
+import { type ServerRespond } from "../lib/DataStreamer";
 
-const schema = {
+const SCHEMA = {
   price_abc: "float",
   price_def: "float",
   ratio: "float",
@@ -17,7 +19,7 @@ type PerspectiveViewerElement = HTMLElement & {
 };
 
 type Props = {
-  data: any[];
+  data: ServerRespond[];
 };
 
 export default function Graph({ data }: Props) {
@@ -32,7 +34,7 @@ export default function Graph({ data }: Props) {
     // @ts-ignore
     if (window.perspective && window.perspective.worker()) {
       // @ts-ignore
-      tableRef.current = window.perspective.worker().table(schema);
+      tableRef.current = window.perspective.worker().table(SCHEMA);
     }
 
     if (!tableRef.current) {
