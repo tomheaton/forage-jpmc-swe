@@ -1,5 +1,5 @@
 import { type Table, type TableData } from "@finos/perspective";
-import { createElement, useEffect, useState } from "react";
+import { Component, createElement } from "react";
 import DataManipulator from "../lib/DataManipulator";
 import { type ServerResponse } from "../lib/DataStreamer";
 import schema from "../lib/schema";
@@ -12,10 +12,10 @@ type Props = {
   data: ServerResponse[];
 };
 
-export default function Graph({ data }: Props) {
-  const [table, setTable] = useState<Table | undefined>(undefined);
+export default class Graph extends Component<Props> {
+  table: Table | undefined;
 
-  useEffect(() => {
+  componentDidMount() {
     const elem = document.getElementsByTagName(
       "perspective-viewer",
     )[0] as unknown as PerspectiveViewerElement;
@@ -25,19 +25,19 @@ export default function Graph({ data }: Props) {
     if (window.perspective && window.perspective.worker()) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
-      setTable(window.perspective.worker().table(schema));
+      this.table = window.perspective.worker().table(schema);
     }
 
-    if (!table) {
+    if (!this.table) {
       return;
     }
 
-    elem.load(table);
+    elem.load(this.table);
     elem.setAttribute("view", "y_line");
-    elem.setAttribute("row-pivots", '["timestamp"]');
+    elem.setAttribute("row-pivots", JSON.stringify(["timestamp"]));
     elem.setAttribute(
       "columns",
-      '["ratio", "lower_bound", "upper_bound", "trigger_alert"]',
+      JSON.stringify(["ratio", "lower_bound", "upper_bound", "trigger_alert"]),
     );
     elem.setAttribute(
       "aggregates",
@@ -51,15 +51,17 @@ export default function Graph({ data }: Props) {
         trigger_alert: "avg",
       }),
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }
 
-  useEffect(() => {
-    if (table) {
-      table.update([DataManipulator.generateRow(data)] as unknown as TableData);
+  componentDidUpdate() {
+    if (this.table) {
+      this.table.update([
+        DataManipulator.generateRow(this.props.data),
+      ] as unknown as TableData);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data]);
+  }
 
-  return createElement("perspective-viewer");
+  render() {
+    return createElement("perspective-viewer");
+  }
 }

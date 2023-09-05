@@ -1,9 +1,10 @@
 import { useState } from "react";
-import DataStreamer, { type ServerRespond } from "../lib/DataStreamer";
-import Graph from "./Graph";
+import DataStreamer, { type ServerResponse } from "../lib/DataStreamer";
+// import Graph from "./Graph";
+import Graph from "./GraphOld";
 
 export default function App() {
-  const [data, setData] = useState<ServerRespond[]>([]);
+  const [data, setData] = useState<ServerResponse[]>([]);
   const [showGraph, setShowGraph] = useState<boolean>(false);
 
   const handleGetData = async () => {
@@ -12,7 +13,7 @@ export default function App() {
     let count = 0;
 
     const interval = setInterval(() => {
-      DataStreamer.getData((serverResponds: ServerRespond[]) => {
+      DataStreamer.getData((serverResponds: ServerResponse[]) => {
         setData(serverResponds);
         setShowGraph(true);
       });

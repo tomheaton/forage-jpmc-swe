@@ -1,4 +1,4 @@
-import { type ServerRespond } from "./DataStreamer";
+import { type ServerResponse } from "./DataStreamer";
 
 export type Row = {
   price_abc: number;
@@ -11,7 +11,7 @@ export type Row = {
 };
 
 export default class DataManipulator {
-  static generateRow(serverResponds: ServerRespond[]): Row {
+  static generateRow(serverResponds: ServerResponse[]): Row {
     const priceABC =
       (serverResponds[0].top_ask.price + serverResponds[0].top_bid.price) / 2;
     const priceDEF =
